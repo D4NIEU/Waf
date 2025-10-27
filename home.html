@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Home | Web Application Firewall</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="firebase.js" defer></script>
+</head>
+<body>
+  <canvas id="matrixCanvas"></canvas>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <h1>Sistema de Estudo: WAF</h1>
+    <button class="logout-btn" id="logoutBtn">Sair</button>
+  </header>
+
+  <!-- CONTEÚDO -->
+  <div class="info-container">
+    <h1 class="title-glow">Web Application Firewall (WAF)</h1>
+    <div class="info-grid">
+
+      <div class="info-box" onclick="openTerminal('conceito')">
+        <h2>O que é um WAF?</h2>
+        <p>O Web Application Firewall é uma camada de proteção voltada a aplicações web. Ele monitora e filtra o tráfego HTTP, bloqueando tentativas de ataque como SQL Injection e Cross-Site Scripting (XSS).</p>
+      </div>
+
+      <div class="info-box" onclick="openTerminal('funcionamento')">
+        <h2>Como o WAF Funciona</h2>
+        <p>O WAF atua entre o usuário e o servidor da aplicação, analisando todas as requisições e respostas para detectar comportamentos suspeitos antes que cheguem ao sistema.</p>
+      </div>
+
+      <div class="info-box" onclick="openTerminal('tipos')">
+        <h2>Tipos de WAF</h2>
+        <p>Existem três principais tipos: baseados em rede, baseados em host e baseados em nuvem. Cada um possui vantagens específicas conforme o ambiente.</p>
+      </div>
+
+      <div class="info-box" onclick="openTerminal('importancia')">
+        <h2>Importância do WAF</h2>
+        <p>É essencial para proteger dados sensíveis, evitar invasões e garantir a continuidade de serviços online, especialmente em sistemas financeiros e e-commerces.</p>
+      </div>
+
+      <div class="info-box" onclick="openTerminal('vantagens')">
+        <h2>Vantagens e Desvantagens</h2>
+        <p>O WAF é eficiente e personalizável, mas pode causar falsos positivos e exige manutenção constante das regras de segurança.</p>
+      </div>
+
+      <div class="info-box" onclick="openTerminal('exemplos')">
+        <h2>Exemplos de Aplicação</h2>
+        <p>Empresas como bancos, lojas virtuais e plataformas de streaming utilizam WAFs para proteger seus sites contra ataques automatizados e vazamentos de dados.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TERMINAL MODAL -->
+  <div id="terminal-modal" class="terminal-modal" aria-hidden="true">
+    <div class="terminal-window">
+      <div class="terminal-titlebar">
+        <div class="terminal-dots">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+        </div>
+        <div class="terminal-path">C:\Users\Etec&gt;</div>
+        <button class="terminal-close" onclick="closeTerminal()">✕</button>
+      </div>
+      <div class="terminal-body" id="terminal-body"></div>
+    </div>
+  </div>
+
+  <!-- TEMPLATES -->
+  <template id="tpl-conceito">
+    <h1>O que é um WAF?</h1>
+    <p>WAF significa <b>Web Application Firewall</b>, um firewall especializado em proteger aplicações web contra ataques comuns da camada HTTP. Ele filtra e monitora o tráfego entre o navegador do usuário e o servidor, identificando padrões maliciosos.</p>
+    <p>Enquanto firewalls tradicionais protegem portas e protocolos, o WAF atua sobre o conteúdo das requisições — analisando URLs, cabeçalhos e parâmetros.</p>
+  </template>
+
+  <template id="tpl-funcionamento">
+    <h1>Como o WAF Funciona</h1>
+    <p>O WAF funciona como um filtro inteligente. Cada requisição enviada ao site é verificada conforme um conjunto de regras (políticas). Essas regras ajudam a detectar tentativas de injeção de código, acessos indevidos e comportamentos anormais.</p>
+    <p>Exemplo: uma tentativa de enviar <code>' OR 1=1 --</code> em um formulário pode ser bloqueada automaticamente.</p>
+  </template>
+
+  <template id="tpl-tipos">
+    <h1>Tipos de WAF</h1>
+    <h3>Baseado em Rede</h3>
+    <p>Geralmente implementado via hardware ou appliance. Possui alto desempenho e baixa latência, mas requer infraestrutura física.</p>
+    <h3>Baseado em Host</h3>
+    <p>Instalado diretamente no servidor da aplicação. Oferece controle detalhado, mas consome recursos do sistema.</p>
+    <h3>Baseado em Nuvem</h3>
+    <p>Serviço hospedado externamente (como AWS WAF ou Cloudflare). É fácil de configurar e escalável, mas depende do provedor.</p>
+  </template>
+
+  <template id="tpl-importancia">
+    <h1>Importância do WAF</h1>
+    <p>Os ataques a aplicações web são a principal causa de vazamentos de dados. O WAF atua como barreira preventiva, impedindo que vulnerabilidades sejam exploradas antes que cheguem à aplicação.</p>
+    <p>Além disso, ajuda a manter a conformidade com normas como a LGPD e PCI-DSS, essenciais para proteção de dados e segurança financeira.</p>
+  </template>
+
+  <template id="tpl-vantagens">
+    <h1>Vantagens e Desvantagens</h1>
+    <h3>Vantagens</h3>
+    <ul>
+      <li>Bloqueia ataques conhecidos (SQLi, XSS, CSRF, etc.).</li>
+      <li>Facilita o monitoramento de tráfego suspeito.</li>
+      <li>Pode ser atualizado rapidamente para novas ameaças.</li>
+    </ul>
+    <h3>Desvantagens</h3>
+    <ul>
+      <li>Possibilidade de falsos positivos, bloqueando usuários legítimos.</li>
+      <li>Necessidade de constante ajuste das regras.</li>
+      <li>Custo adicional, dependendo da solução.</li>
+    </ul>
+  </template>
+
+  <template id="tpl-exemplos">
+    <h1>Exemplos de Aplicação</h1>
+    <p><b>Bancos:</b> Protegem formulários e transações online.</p>
+    <p><b>Lojas Virtuais:</b> Evitam roubo de informações de cartões.</p>
+    <p><b>Plataformas Educacionais:</b> Impedem injeções e acessos não autorizados.</p>
+    <p><b>Streaming e Redes Sociais:</b> Filtram bots e ataques automatizados.</p>
+  </template>
+
+  <script>
+    // Matrix effect
+    (function(){
+      const canvas = document.getElementById('matrixCanvas');
+      const ctx = canvas.getContext('2d');
+      let width, height, columns, drops, fontSize = 16;
+      const chars = '01αβλΔΩΞ<>/{}[]()@#%&*+=-;:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+      function resize(){ width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; columns = Math.floor(width / fontSize) + 1; drops = new Array(columns).fill(1); }
+      function draw(){
+        ctx.fillStyle = 'rgba(3,6,10,0.28)'; ctx.fillRect(0,0,width,height);
+        ctx.fillStyle = 'rgba(0,255,174,0.9)'; ctx.font = fontSize + 'px monospace';
+        for(let i=0;i<drops.length;i++){
+          const text = chars.charAt(Math.floor(Math.random()*chars.length));
+          const x = i * fontSize; const y = drops[i] * fontSize;
+          ctx.fillText(text, x, y);
+          if(y > height && Math.random() > 0.975) drops[i]=0;
+          drops[i]++;
+        }
+        requestAnimationFrame(draw);
+      }
+      window.addEventListener('resize', resize);
+      resize(); draw();
+    })();
+
+    // Firebase Auth
+    window.addEventListener('load', () => {
+      if(!window.auth){ return; }
+      auth.onAuthStateChanged(user => { if(!user) window.location.href = 'index.html'; });
+      document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut().then(()=>window.location.href='index.html'));
+    });
+
+    // Modal
+    function openTerminal(key) {
+      const modal = document.getElementById('terminal-modal');
+      const body = document.getElementById('terminal-body');
+      const tpl = document.getElementById('tpl-' + key);
+      body.innerHTML = tpl ? tpl.innerHTML : '<h1>Conteúdo não encontrado</h1>';
+      modal.setAttribute('aria-hidden', 'false');
+    }
+    function closeTerminal() {
+      document.getElementById('terminal-modal').setAttribute('aria-hidden', 'true');
+      document.getElementById('terminal-body').innerHTML = '';
+    }
+    document.addEventListener('keydown', e => { if(e.key === 'Escape') closeTerminal(); });
+  </script>
+</body>
+</html>

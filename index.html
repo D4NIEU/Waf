@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Login | Waf</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="img/cadeado.jpg" type="image/x-icon">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="firebase.js" defer></script>
+</head>
+<body>
+  <canvas id="matrixCanvas"></canvas>
+
+  <div class="wrapper">
+    <div class="container" role="main" aria-labelledby="login-title">
+      <div class="header">
+
+        <div class="title">
+          <h2 id="login-title"> Login - WAF</h2>
+          <div class="subtitle">Aprenda sobre Web Application Firewall (WAF)! 😎</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="input"><input id="email" type="email" placeholder="Seu email" autocomplete="username"></div>
+        <div class="input"><input id="password" type="password" placeholder="Senha" autocomplete="current-password"></div>
+        <button id="loginBtn" class="btn">Entrar</button>
+        <a class="smalllink" href="cadastro.html">Não tem conta? Cadastre-se</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Matrix effect
+    (function(){
+      const canvas = document.getElementById('matrixCanvas');
+      const ctx = canvas.getContext('2d');
+      let width, height, columns, drops, fontSize = 16, chars;
+
+      function resize(){
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        columns = Math.floor(width / fontSize) + 1;
+        drops = new Array(columns).fill(1);
+      }
+
+      // characters: mix of katakana, ascii, digits
+      chars = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ' +
+              '01αβλΔΩΞ<>/{}[]()@#%&*+=-;:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+      function draw(){
+        ctx.fillStyle = 'rgba(3,6,10,0.28)';
+        ctx.fillRect(0,0,width,height);
+
+        ctx.fillStyle = 'rgba(0,255,174,0.9)'; // neon green
+        ctx.font = fontSize + 'px Consolas, monospace';
+
+        for(let i=0;i<drops.length;i++){
+          const text = chars.charAt(Math.floor(Math.random()*chars.length));
+          const x = i * fontSize;
+          const y = drops[i] * fontSize;
+          ctx.fillText(text, x, y);
+
+          if(y > height && Math.random() > 0.975) drops[i]=0;
+          drops[i]++;
+        }
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', () => { resize(); });
+      resize();
+      draw();
+    })();
+
+    // Firebase auth logic
+    window.addEventListener('load', () => {
+      const loginBtn = document.getElementById('loginBtn');
+      loginBtn.addEventListener('click', () => {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        if(!email || !password){ alert('Preencha email e senha.'); return; }
+
+        if(!window.auth){
+          alert('Firebase não inicializado. Verifique firebase.js e tags <script>.');
+          return;
+        }
+
+        auth.signInWithEmailAndPassword(email, password)
+          .then(() => { window.location.href = 'home.html'; })
+          .catch(err => { alert(err.message); });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Cadastro | WafW00f</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="firebase.js" defer></script>
+</head>
+<body>
+  <!-- Fundo estilo Matrix -->
+  <canvas id="matrixCanvas"></canvas>
+
+  <div class="wrapper">
+    <div class="container" role="main" aria-labelledby="register-title">
+      <div class="header">
+
+        <div class="title">
+          <h2 id="login-title">Cadastro - WAF</h2>
+          <div class="subtitle">Crie sua conta para começar a detectar WAFs</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="input"><input id="email" type="email" placeholder="Seu email" autocomplete="email"></div>
+        <div class="input"><input id="password" type="password" placeholder="Senha (mín. 6 caracteres)"></div>
+        <button id="registerBtn" class="btn">Cadastrar</button>
+        <a class="smalllink" href="index.html">Já tem conta? Faça login</a>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+
+    (function(){
+      const canvas = document.getElementById('matrixCanvas');
+      const ctx = canvas.getContext('2d');
+      let width, height, columns, drops, fontSize = 16, chars;
+      function resize(){ width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; columns = Math.floor(width / fontSize) + 1; drops = new Array(columns).fill(1); }
+      chars = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ' +
+              '01αβλΔΩΞ<>/{}[]()@#%&*+=-;:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+      function draw(){
+        ctx.fillStyle = 'rgba(3,6,10,0.28)'; ctx.fillRect(0,0,width,height);
+        ctx.fillStyle = 'rgba(0,255,174,0.9)'; ctx.font = fontSize + 'px monospace';
+        for(let i=0;i<drops.length;i++){
+          const text = chars.charAt(Math.floor(Math.random()*chars.length));
+          const x = i * fontSize; const y = drops[i] * fontSize;
+          ctx.fillText(text, x, y);
+          if(y > height && Math.random() > 0.975) drops[i]=0;
+          drops[i]++;
+        }
+        requestAnimationFrame(draw);
+      }
+      window.addEventListener('resize', () => { resize(); });
+      resize(); draw();
+    })();
+
+    // Registration logic
+    window.addEventListener('load', () => {
+      document.getElementById('registerBtn').addEventListener('click', () => {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        if(!email || !password){ alert('Preencha email e senha.'); return; }
+        if(password.length < 6){ alert('Senha muito curta (mínimo 6 caracteres).'); return; }
+
+        if(!window.auth){ alert('Firebase não inicializado.'); return; }
+
+        auth.createUserWithEmailAndPassword(email, password)
+          .then(() => {
+            alert('Usuário criado com sucesso!');
+            window.location.href = 'index.html';
+          })
+          .catch(err => { alert(err.message); });
+      });
+    });
+  </script>
+</body>
+</html>
