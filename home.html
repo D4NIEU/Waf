@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Home | Web Application Firewall</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="img/cadeado.jpg" type="image/x-icon">
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="firebase.js" defer></script>
@@ -12,15 +13,16 @@
 <body>
   <canvas id="matrixCanvas"></canvas>
 
-  <!-- HEADER -->
+  <!-- header -->
   <header class="site-header">
     <h1>Sistema de Estudo: WAF</h1>
     <button class="logout-btn" id="logoutBtn">Sair</button>
   </header>
 
-  <!-- CONTEÚDO -->
+
+  <!-- boxes -->
   <div class="info-container">
-    <h1 class="title-glow">Web Application Firewall (WAF)</h1>
+    <h1 class="title-glow">WAF e WAFW00F:</h1>
     <div class="info-grid">
 
       <div class="info-box" onclick="openTerminal('conceito')">
@@ -53,8 +55,26 @@
         <p>Empresas como bancos, lojas virtuais e plataformas de streaming utilizam WAFs para proteger seus sites contra ataques automatizados e vazamentos de dados.</p>
       </div>
 
+      <div class="info-box" onclick="openTerminal('wafw00f-intro')">
+  <h2>O que é o WAFW00F?</h2>
+  <p>O <b>WAFW00F</b> é uma ferramenta de reconhecimento usada para detectar a presença de firewalls de aplicações web (WAFs) em sites. Ela analisa respostas HTTP para identificar o tipo de WAF ativo.</p>
+</div>
+
+<div class="info-box" onclick="openTerminal('wafw00f-funciona')">
+  <h2>Como o WAFW00F Funciona</h2>
+  <p>O WAFW00F envia requisições especiais e observa os cabeçalhos e códigos de resposta. A partir disso, ele determina se há um WAF filtrando o tráfego e, em muitos casos, qual fornecedor está sendo usado, como Cloudflare, F5 ou Akamai.</p>
+</div>
+
+<div class="info-box" onclick="openTerminal('wafw00f-uso')">
+  <h2>Aplicações e Uso Ético</h2>
+  <p>É uma ferramenta muito usada por analistas de segurança e pentesters para mapear defesas web. O uso deve ser ético e autorizado, pois seu objetivo é identificar, não explorar vulnerabilidades.</p>
+</div>
+
     </div>
   </div>
+
+
+
 
   <!-- TERMINAL MODAL -->
   <div id="terminal-modal" class="terminal-modal" aria-hidden="true">
@@ -71,6 +91,11 @@
       <div class="terminal-body" id="terminal-body"></div>
     </div>
   </div>
+
+
+
+
+
 
   <!-- TEMPLATES -->
   <template id="tpl-conceito">
@@ -125,6 +150,48 @@
     <p><b>Streaming e Redes Sociais:</b> Filtram bots e ataques automatizados.</p>
   </template>
 
+  <template id="tpl-wafw00f-intro">
+  <h1>O que é o WAFW00F?</h1>
+  <p>O <b>WAFW00F</b> é uma ferramenta open-source desenvolvida para identificar se um site está protegido por um <b>Web Application Firewall (WAF)</b>.</p>
+  <p>Ela analisa as respostas HTTP recebidas após o envio de requisições de teste, procurando padrões conhecidos de WAFs. Esses padrões podem estar nos cabeçalhos, cookies ou códigos de status retornados.</p>
+  <p>Com o WAFW00F é possível detectar soluções como Cloudflare, F5 BIG-IP, Akamai, AWS WAF, Sucuri, Imperva e muitas outras.</p>
+</template>
+
+<template id="tpl-wafw00f-funciona">
+  <h1>Como o WAFW00F Funciona</h1>
+  <p>O WAFW00F identifica WAFs enviando requisições HTTP especialmente projetadas e analisando as respostas do servidor. Se o WAF modificar ou bloquear certas requisições, isso indica sua presença.</p>
+  <p>Depois da detecção, a ferramenta compara o comportamento e os cabeçalhos com uma base de assinaturas para identificar qual WAF está ativo.</p>
+  <p>Exemplo prático de uso no terminal:</p>
+  <pre>wafw00f https://exemplo.com</pre>
+  <p>O comando acima tenta identificar o WAF utilizado pelo site e retorna o nome do fabricante, se reconhecido.</p>
+</template>
+
+<template id="tpl-wafw00f-uso">
+  <h1>Aplicações e Uso Ético</h1>
+  <p>O WAFW00F é amplamente utilizado em auditorias de segurança, testes de penetração e reconhecimento de infraestrutura. Ele ajuda profissionais de segurança a entenderem as camadas de defesa antes de realizar análises mais profundas.</p>
+  <p>No entanto, é importante lembrar que a ferramenta deve ser usada apenas em sistemas próprios ou com autorização explícita do proprietário. O uso indevido pode ser interpretado como atividade maliciosa.</p>
+  <p>Em resumo: o WAFW00F é uma ferramenta poderosa para mapeamento defensivo — útil, mas deve sempre ser usada com responsabilidade e ética profissional.</p>
+</template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <script>
     // Matrix effect
     (function(){
@@ -170,5 +237,6 @@
     }
     document.addEventListener('keydown', e => { if(e.key === 'Escape') closeTerminal(); });
   </script>
+
 </body>
 </html>
